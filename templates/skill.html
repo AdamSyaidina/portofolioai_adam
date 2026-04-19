@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="Skill Muhammad Adam Syaidina">
+    <title>Skill | Adam Syaidina</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-big">as</span>
+            <div class="logo-text">
+                <span>Adam</span>
+                <span>Syaidina</span>
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li onclick="location.href='/'">Home</li>
+            <li onclick="location.href='/about'">About Me</li>
+            <li onclick="location.href='/projects'">Projects</li>
+            <li onclick="location.href='/experience'">Experience</li>
+            <li class="active" onclick="location.href='/skill'">Skill</li>
+            <li onclick="location.href='/contact'">Contact</li>
+        </ul>
+    </nav>
+
+    <!-- SKILL SECTION -->
+    <section class="skill-page">
+        <div class="skill-head">
+            <p class="skill-tagline">Capabilities, tools, and personal strengths</p>
+            <h1>Skill</h1>
+            <p class="skill-intro">
+                Kumpulan kemampuan teknis dan non-teknis yang saya kembangkan melalui pembelajaran,
+                praktik, organisasi, dan pengerjaan proyek.
+            </p>
+        </div>
+
+        <div class="skill-layout">
+
+            <!-- HARD SKILL -->
+            <div class="skill-card-box">
+                <div class="skill-card-head">
+                    <h2>Hard Skill</h2>
+                    <p>Kemampuan teknis yang saya gunakan dalam pembelajaran dan proyek.</p>
+                </div>
+
+                <div class="skill-list modern-skill-list">
+                    <span class="skill-badge">MATLAB</span>
+                    <span class="skill-badge">Quartus</span>
+                    <span class="skill-badge">SDR</span>
+                    <span class="skill-badge">IoT</span>
+                    <span class="skill-badge">Python</span>
+                    <span class="skill-badge">GNU Radio</span>
+                    <span class="skill-badge">Fiber Optic</span>
+                    <span class="skill-badge">Elektronika</span>
+                </div>
+            </div>
+
+            <!-- SOFT SKILL -->
+            <div class="skill-card-box">
+                <div class="skill-card-head">
+                    <h2>Soft Skill</h2>
+                    <p>Kemampuan personal yang membantu saya bekerja dalam tim dan organisasi.</p>
+                </div>
+
+                <div class="skill-list modern-skill-list">
+                    <span class="skill-badge soft">Kerja Sama</span>
+                    <span class="skill-badge soft">Disiplin</span>
+                    <span class="skill-badge soft">Komunikasi</span>
+                    <span class="skill-badge soft">Teliti</span>
+                    <span class="skill-badge soft">Tanggung Jawab</span>
+                    <span class="skill-badge soft">Adaptif</span>
+                    <span class="skill-badge soft">Koordinasi</span>
+                    <span class="skill-badge soft">Problem Solving</span>
+                </div>
+            </div>
+
+            <!-- OPTIONAL MINI PANEL -->
+            <div class="skill-note-box">
+                <p>
+                    Saya terus mengembangkan skill secara bertahap melalui praktik,
+                    pembelajaran mandiri, dan keterlibatan di berbagai kegiatan.
+                </p>
+                <button class="btn-secondary" onclick="toggleChat()">Ask Cannt</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CANNT CHARACTER -->
+    <div class="cannt-wrapper" onclick="toggleChat()">
+        <img src="/static/images/cannt.png" alt="Cannt">
+    </div>
+
+    <!-- CHAT BOX -->
+    <div class="chat-container" id="chatBox">
+        <div class="chat-header">
+            <span>Cannt</span>
+            <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+
+        <div class="chat-content" id="chatContent"></div>
+
+        <div class="chat-input">
+            <input type="text" id="question" placeholder="Tanya tentang Adam...">
+            <button onclick="askAI()">Kirim</button>
+        </div>
+    </div>
+
+    <script>
+    let hasShownWelcome = false;
+
+    function toggleChat() {
+        let chat = document.getElementById("chatBox");
+        let cannt = document.querySelector(".cannt-wrapper");
+        let chatContent = document.getElementById("chatContent");
+
+        if (chat.style.display === "flex") {
+            chat.style.display = "none";
+            cannt.style.display = "block";
+        } else {
+            chat.style.display = "flex";
+            cannt.style.display = "none";
+
+            if (!hasShownWelcome) {
+                chatContent.innerHTML += `
+                    <div class="ai-msg">
+                        Halo! Saya <strong>Cannt</strong>, asisten AI dari Adam 😊<br>
+                        Silakan tanya apa saja ya!
+                    </div>
+                `;
+                hasShownWelcome = true;
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+        }
+    }
+
+    async function askAI() {
+        let questionInput = document.getElementById("question");
+        let question = questionInput.value.trim();
+
+        if (!question) return;
+
+        let chatContent = document.getElementById("chatContent");
+
+        chatContent.innerHTML += `
+            <div class="user-msg">${question}</div>
+        `;
+
+        questionInput.value = "";
+
+        let typingId = "typing-" + Date.now();
+        chatContent.innerHTML += `
+            <div class="ai-msg typing" id="${typingId}">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        try {
+            let response = await fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            let data = await response.json();
+
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = data.answer;
+            typingBubble.classList.add("ai-msg");
+        } catch (error) {
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = "Maaf, Cannt lagi error 😅";
+            typingBubble.classList.add("ai-msg");
+        }
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let input = document.getElementById("question");
+
+        if (input) {
+            input.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    askAI();
+                }
+            });
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="About Muhammad Adam Syaidina">
+    <title>About Me | Adam Syaidina</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-big">as</span>
+            <div class="logo-text">
+                <span>Adam</span>
+                <span>Syaidina</span>
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li onclick="location.href='/'">Home</li>
+            <li class="active" onclick="location.href='/about'">About Me</li>
+            <li onclick="location.href='/projects'">Projects</li>
+            <li onclick="location.href='/experience'">Experience</li>
+            <li onclick="location.href='/skill'">Skill</li>
+            <li onclick="location.href='/contact'">Contact</li>
+        </ul>
+    </nav>
+
+    <!-- ABOUT SECTION -->
+    <section class="about-page">
+        <div class="about-left">
+            <p class="about-tag">Get to know Adam</p>
+            <h1>About Me</h1>
+            <p class="about-intro">
+                Saya adalah mahasiswa Teknik Telekomunikasi yang tertarik pada pengembangan teknologi,
+                khususnya Internet of Things, Web Development, dan Machine Learning.
+            </p>
+
+            <div class="about-content">
+                <p>
+                    Saya senang mempelajari bagaimana suatu sistem bekerja, lalu mencoba menerapkannya
+                    menjadi solusi yang sederhana, fungsional, dan bermanfaat bagi masyarakat.
+                </p>
+
+                <p>
+                    Saya memiliki pengalaman bekerja dalam tim melalui berbagai peran organisasi,
+                    seperti sekretaris, bendahara, dan panitia pelaksana kegiatan. Dari pengalaman itu,
+                    saya terbiasa bekerja secara terstruktur, berkomunikasi dengan baik, dan bertanggung jawab
+                    dalam menyelesaikan tugas.
+                </p>
+
+                <p>
+                    Dalam bidang teknis, saya pernah menggunakan beberapa tools seperti MATLAB dan Eagle.
+                    Saat ini, saya juga sedang mempelajari pengembangan web dan machine learning.
+                    Saya terbiasa mempelajari hal baru dan mengembangkan kemampuan melalui praktik
+                    serta pengerjaan proyek.
+                </p>
+
+                <p>
+                    Saya memiliki perhatian terhadap detail dalam setiap pekerjaan yang saya lakukan dan
+                    berusaha menyelesaikan tugas dengan teliti. Saya percaya bahwa perkembangan berasal dari
+                    konsistensi, sehingga saya terus berusaha untuk belajar dan berkembang secara bertahap.
+                </p>
+            </div>
+        </div>
+
+        <div class="about-right">
+            <div class="about-card">
+                <h3>Quick Snapshot</h3>
+
+                <div class="snapshot-item">
+                    <span class="snapshot-label">Status</span>
+                    <p>Mahasiswa S1 Teknik Telekomunikasi</p>
+                </div>
+
+                <div class="snapshot-item">
+                    <span class="snapshot-label">Focus</span>
+                    <p>IoT, Web Development, Machine Learning</p>
+                </div>
+
+                <div class="snapshot-item">
+                    <span class="snapshot-label">Way of Working</span>
+                    <p>Terstruktur, adaptif, komunikatif, dan teliti</p>
+                </div>
+
+                <div class="snapshot-item">
+                    <span class="snapshot-label">Current Goal</span>
+                    <p>Mengembangkan kemampuan teknis sekaligus membangun karya yang bermanfaat</p>
+                </div>
+            </div>
+
+            <div class="about-mini-card">
+                <p>
+                    Mau tahu Adam lebih cepat?
+                </p>
+                <button class="btn-secondary" onclick="toggleChat()">Ask Cannt</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CANNT CHARACTER -->
+    <div class="cannt-wrapper" onclick="toggleChat()">
+        <img src="/static/images/cannt.png" alt="Cannt">
+    </div>
+
+    <!-- CHAT BOX -->
+    <div class="chat-container" id="chatBox">
+        <div class="chat-header">
+            <span>Cannt</span>
+            <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+
+        <div class="chat-content" id="chatContent"></div>
+
+        <div class="chat-input">
+            <input type="text" id="question" placeholder="Tanya tentang Adam...">
+            <button onclick="askAI()">Kirim</button>
+        </div>
+    </div>
+
+    <script>
+    let hasShownWelcome = false;
+
+    function toggleChat() {
+        let chat = document.getElementById("chatBox");
+        let cannt = document.querySelector(".cannt-wrapper");
+        let chatContent = document.getElementById("chatContent");
+
+        if (chat.style.display === "flex") {
+            chat.style.display = "none";
+            cannt.style.display = "block";
+        } else {
+            chat.style.display = "flex";
+            cannt.style.display = "none";
+
+            if (!hasShownWelcome) {
+                chatContent.innerHTML += `
+                    <div class="ai-msg">
+                        Halo! Saya <strong>Cannt</strong>, asisten AI dari Adam 😊<br>
+                        Silakan tanya apa saja ya!
+                    </div>
+                `;
+                hasShownWelcome = true;
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+        }
+    }
+
+    async function askAI() {
+        let questionInput = document.getElementById("question");
+        let question = questionInput.value.trim();
+
+        if (!question) return;
+
+        let chatContent = document.getElementById("chatContent");
+
+        chatContent.innerHTML += `
+            <div class="user-msg">${question}</div>
+        `;
+
+        questionInput.value = "";
+
+        let typingId = "typing-" + Date.now();
+        chatContent.innerHTML += `
+            <div class="ai-msg typing" id="${typingId}">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        try {
+            let response = await fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            let data = await response.json();
+
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = data.answer;
+            typingBubble.classList.add("ai-msg");
+        } catch (error) {
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = "Maaf, Cannt lagi error 😅";
+            typingBubble.classList.add("ai-msg");
+        }
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let input = document.getElementById("question");
+
+        if (input) {
+            input.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    askAI();
+                }
+            });
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="Projects Muhammad Adam Syaidina">
+    <title>Projects | Adam Syaidina</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-big">as</span>
+            <div class="logo-text">
+                <span>Adam</span>
+                <span>Syaidina</span>
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li onclick="location.href='/'">Home</li>
+            <li onclick="location.href='/about'">About Me</li>
+            <li class="active" onclick="location.href='/projects'">Projects</li>
+            <li onclick="location.href='/experience'">Experience</li>
+            <li onclick="location.href='/skill'">Skill</li>
+            <li onclick="location.href='/contact'">Contact</li>
+        </ul>
+    </nav>
+
+    <!-- PROJECTS SECTION -->
+    <section class="projects-page">
+        <div class="projects-head">
+            <p class="projects-tag">Selected works & initiatives</p>
+            <h1>Projects</h1>
+            <p class="projects-intro">
+                Beberapa proyek yang mencerminkan minat saya dalam teknologi, pengembangan sistem,
+                serta kontribusi sosial yang berdampak nyata.
+            </p>
+        </div>
+
+        <!-- PROJECT 1 -->
+        <div class="project-showcase">
+            <div class="project-copy">
+                <span class="project-label">Personal Branding</span>
+                <h3>Pembuatan Situs Web Portofolio Pribadi</h3>
+                <p>
+                    Website portofolio personal yang dikembangkan sebagai media personal branding
+                    dengan potensi menjangkau <strong>100+ juta pengguna internet</strong>. Proyek ini
+                    masih dalam tahap pengembangan berkelanjutan dan akan terus diperbarui seiring
+                    dengan perkembangan pengalaman dan karya.
+                </p>
+
+                <div class="project-meta">
+                    <span>Web Portfolio</span>
+                    <span>UI Design</span>
+                    <span>Personal Project</span>
+                </div>
+            </div>
+
+            <div class="project-visual">
+                <div class="project-image-box">
+                    <img src="static/images/projects1.png" alt="Project 1">
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECT 2 -->
+        <div class="project-showcase reverse">
+            <div class="project-copy">
+                <span class="project-label">AI Assistant</span>
+                <h3>Chatbot AI “Cannt”</h3>
+                <p>
+                    Chatbot AI yang dirancang untuk membantu pengunjung mendapatkan informasi
+                    secara cepat dan interaktif, termasuk hal-hal yang tidak tercantum di website.
+                    Saat ini masih dalam tahap pengembangan dan akan terus ditingkatkan.
+                </p>
+
+                <div class="project-meta">
+                    <span>AI Chatbot</span>
+                    <span>Interactive Portfolio</span>
+                    <span>Ongoing Development</span>
+                </div>
+            </div>
+
+            <div class="project-visual">
+                <div class="project-image-box">
+                    <img src="static/images/projects2.png" alt="Project 2">
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECT 3 -->
+        <div class="project-showcase">
+            <div class="project-copy">
+                <span class="project-label">Social Impact</span>
+                <h3>Kegiatan Bakti Sosial “SIMADU 8”</h3>
+                <p>
+                    Kegiatan bakti sosial di Dusun Wanareta, Banyumas, yang berfokus pada solusi
+                    pengelolaan sampah melalui workshop pembuatan paving block dari plastik.
+                    Dilaksanakan pada Agustus–September 2025 dan berhasil melibatkan
+                    <strong>100+ warga</strong>, memberikan dampak nyata bagi masyarakat setempat.
+                </p>
+
+                <div class="project-meta">
+                    <span>Community Project</span>
+                    <span>Environmental Awareness</span>
+                    <span>Workshop</span>
+                </div>
+            </div>
+
+            <div class="project-visual">
+                <div class="project-image-box">
+                    <img src="static/images/projects3.jpeg" alt="Project 3">
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECT 4 -->
+        <div class="project-showcase reverse">
+            <div class="project-copy">
+                <span class="project-label">Volunteer Program</span>
+                <h3>Kegiatan Volunteer “Purwokerto Menyapa”</h3>
+                <p>
+                    Program volunteer oleh NGO Sankara, di mana saya berperan sebagai Project Leader
+                    Regional Purwokerto. Program ini telah dilaksanakan sebanyak
+                    <strong>3 kali di lokasi berbeda</strong> dengan total
+                    <strong>150+ peserta</strong>, berfokus pada edukasi dan kontribusi sosial langsung.
+                </p>
+
+                <div class="project-meta">
+                    <span>Volunteer Activity</span>
+                    <span>Project Leadership</span>
+                    <span>Regional Initiative</span>
+                </div>
+            </div>
+
+            <div class="project-visual">
+                <div class="project-image-box">
+                    <img src="static/images/projects4.jpeg" alt="Project 4">
+                </div>
+            </div>
+        </div>
+
+        <div class="projects-footer-note">
+            <p>
+                Beberapa proyek lain masih dalam tahap dokumentasi dan akan segera ditambahkan.
+            </p>
+        </div>
+    </section>
+
+    <!-- CANNT CHARACTER -->
+    <div class="cannt-wrapper" onclick="toggleChat()">
+        <img src="/static/images/cannt.png" alt="Cannt">
+    </div>
+
+    <!-- CHAT BOX -->
+    <div class="chat-container" id="chatBox">
+        <div class="chat-header">
+            <span>Cannt</span>
+            <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+
+        <div class="chat-content" id="chatContent"></div>
+
+        <div class="chat-input">
+            <input type="text" id="question" placeholder="Tanya tentang Adam...">
+            <button onclick="askAI()">Kirim</button>
+        </div>
+    </div>
+
+    <script>
+    let hasShownWelcome = false;
+
+    function toggleChat() {
+        let chat = document.getElementById("chatBox");
+        let cannt = document.querySelector(".cannt-wrapper");
+        let chatContent = document.getElementById("chatContent");
+
+        if (chat.style.display === "flex") {
+            chat.style.display = "none";
+            cannt.style.display = "block";
+        } else {
+            chat.style.display = "flex";
+            cannt.style.display = "none";
+
+            if (!hasShownWelcome) {
+                chatContent.innerHTML += `
+                    <div class="ai-msg">
+                        Halo! Saya <strong>Cannt</strong>, asisten AI dari Adam 😊<br>
+                        Silakan tanya apa saja ya!
+                    </div>
+                `;
+                hasShownWelcome = true;
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+        }
+    }
+
+    async function askAI() {
+        let questionInput = document.getElementById("question");
+        let question = questionInput.value.trim();
+
+        if (!question) return;
+
+        let chatContent = document.getElementById("chatContent");
+
+        chatContent.innerHTML += `
+            <div class="user-msg">${question}</div>
+        `;
+
+        questionInput.value = "";
+
+        let typingId = "typing-" + Date.now();
+        chatContent.innerHTML += `
+            <div class="ai-msg typing" id="${typingId}">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        try {
+            let response = await fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            let data = await response.json();
+
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = data.answer;
+            typingBubble.classList.add("ai-msg");
+        } catch (error) {
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = "Maaf, Cannt lagi error 😅";
+            typingBubble.classList.add("ai-msg");
+        }
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let input = document.getElementById("question");
+
+        if (input) {
+            input.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    askAI();
+                }
+            });
+        }
+    });
+    </script>
+
+</body>
+</html>

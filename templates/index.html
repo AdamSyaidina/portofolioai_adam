@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="Portfolio Muhammad Adam Syaidina">
+    <title>Adam Syaidina | Portfolio</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">
+        <span class="logo-big">as</span>
+        <div class="logo-text">
+            <span>Adam</span>
+            <span>Syaidina</span>
+        </div>
+    </div>
+
+    <ul class="menu">
+        <li class="active" onclick="location.href='/'">Home</li>
+        <li onclick="location.href='/about'">About Me</li>
+        <li onclick="location.href='/projects'">Projects</li>
+        <li onclick="location.href='/experience'">Experience</li>
+        <li onclick="location.href='/skill'">Skill</li>
+        <li onclick="location.href='/contact'">Contact</li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-left">
+        <p class="hero-tag">Interactive Portfolio with AI Assistant</p>
+
+        <h1>
+            Hi, I'm <span>Adam</span><br>
+            Building my path in<br>
+            IoT, Web, and Machine Learning
+        </h1>
+
+        <p class="hero-desc">
+            Saya adalah mahasiswa Teknik Telekomunikasi yang tertarik pada Internet of Things, Web Development,
+            dan Machine Learning. Kamu juga bisa langsung bertanya ke <strong>Cannt</strong>
+            untuk mengenal saya lebih jauh.
+        </p>
+
+        <div class="hero-actions">
+            <a href="/about" class="btn-primary">Explore More</a>
+            <button class="btn-secondary" onclick="toggleChat()">Ask Cannt</button>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <div class="hero-card">
+            <img src="/static/images/cannt-hero.png" alt="Cannt">
+            <div class="hero-bubble">
+                Halo! Aku <strong>Cannt</strong> 👋🏻<br>
+                Tanya apa saja tentang Adam yaa
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CANNT BUTTON -->
+<div class="cannt-wrapper" onclick="toggleChat()">
+    <img src="/static/images/cannt.png" alt="Cannt">
+</div>
+
+<!-- CHAT -->
+<div class="chat-container" id="chatBox">
+    <div class="chat-header">
+        Cannt
+        <span onclick="toggleChat()">✖</span>
+    </div>
+
+    <div class="chat-content" id="chatContent"></div>
+
+    <div class="chat-input">
+        <input type="text" id="question" placeholder="Tanya tentang Adam...">
+        <button onclick="askAI()">Kirim</button>
+    </div>
+</div>
+
+<script>
+let hasShownWelcome = false;
+
+function toggleChat() {
+    let chat = document.getElementById("chatBox");
+    let cannt = document.querySelector(".cannt-wrapper");
+    let chatContent = document.getElementById("chatContent");
+
+    if (chat.style.display === "flex") {
+        chat.style.display = "none";
+        cannt.style.display = "block";
+    } else {
+        chat.style.display = "flex";
+        cannt.style.display = "none";
+
+        if (!hasShownWelcome) {
+            chatContent.innerHTML += `
+                <div class="ai-msg">
+                    Halo! Saya <strong>Cannt</strong>, asisten AI dari Adam 😊<br>
+                    Silakan tanya apa saja ya!
+                </div>
+            `;
+            hasShownWelcome = true;
+        }
+    }
+}
+
+async function askAI() {
+    let input = document.getElementById("question");
+    let question = input.value.trim();
+    if (!question) return;
+
+    let chat = document.getElementById("chatContent");
+
+    chat.innerHTML += `<div class="user-msg">${question}</div>`;
+    input.value = "";
+
+    let id = "typing-" + Date.now();
+    chat.innerHTML += `
+        <div class="ai-msg typing" id="${id}">
+            <span></span><span></span><span></span>
+        </div>
+    `;
+
+    try {
+        let res = await fetch("/ask", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({question})
+        });
+
+        let data = await res.json();
+
+        let el = document.getElementById(id);
+        el.classList.remove("typing");
+        el.innerHTML = data.answer;
+
+    } catch {
+        let el = document.getElementById(id);
+        el.innerHTML = "Maaf, lagi error 😅";
+    }
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "Enter") askAI();
+});
+</script>
+
+</body>
+</html>

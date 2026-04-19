@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="Contact Muhammad Adam Syaidina">
+    <title>Contact | Adam Syaidina</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-big">as</span>
+            <div class="logo-text">
+                <span>Adam</span>
+                <span>Syaidina</span>
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li onclick="location.href='/'">Home</li>
+            <li onclick="location.href='/about'">About Me</li>
+            <li onclick="location.href='/projects'">Projects</li>
+            <li onclick="location.href='/experience'">Experience</li>
+            <li onclick="location.href='/skill'">Skill</li>
+            <li class="active" onclick="location.href='/contact'">Contact</li>
+        </ul>
+    </nav>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-page">
+        <div class="contact-head">
+            <p class="contact-tag">Let’s connect</p>
+            <h1>Contact</h1>
+            <p class="contact-intro">
+                Kalau ingin berdiskusi, berkolaborasi, atau sekadar menyapa, kamu bisa
+                menghubungi saya lewat informasi berikut atau langsung kirim pesan melalui form.
+            </p>
+        </div>
+
+        <div class="contact-layout">
+
+            <!-- LEFT -->
+            <div class="contact-info-card">
+                <h2>Contact Information</h2>
+
+                <div class="contact-info-item">
+                    <span class="contact-label">Surel</span>
+                    <a href="mailto:adamuhammad1725@gmail.com">adamuhammad1725@gmail.com</a>
+                </div>
+
+                <div class="contact-info-item">
+                    <span class="contact-label">Telepon</span>
+                    <a href="tel:+6283857324348">+62 838 5732 4348</a>
+                </div>
+
+                <div class="contact-info-item">
+                    <span class="contact-label">LinkedIn</span>
+                    <a href="https://www.linkedin.com/" target="_blank">Muhammad Adam Syaidina</a>
+                </div>
+
+                <div class="contact-note">
+                    <p>
+                        Biasanya saya lebih cepat merespons melalui WhatsApp, silakan gunakan nomor telepon yang tertera. Untuk pesan formal
+                        atau kolaborasi, kamu bisa langsung gunakan form di samping.
+                    </p>
+                </div>
+            </div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrapper">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+            <!-- RIGHT -->
+            <div class="contact-form-card">
+                <h2>Send a Message</h2>
+
+                <form method="POST" action="/send-message" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Nama</label>
+                        <input type="text" id="name" name="name" placeholder="Nama kamu" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="emailkamu@gmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subjek</label>
+                        <input type="text" id="subject" name="subject" placeholder="Tujuan pesan" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Pesan</label>
+                        <textarea id="message" name="message" rows="6" placeholder="Tulis pesan kamu di sini..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CANNT CHARACTER -->
+    <div class="cannt-wrapper" onclick="toggleChat()">
+        <img src="/static/images/cannt.png" alt="Cannt">
+    </div>
+
+    <!-- CHAT BOX -->
+    <div class="chat-container" id="chatBox">
+        <div class="chat-header">
+            <span>Cannt</span>
+            <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+
+        <div class="chat-content" id="chatContent"></div>
+
+        <div class="chat-input">
+            <input type="text" id="question" placeholder="Tanya tentang Adam...">
+            <button onclick="askAI()">Kirim</button>
+        </div>
+    </div>
+
+    <script>
+    let hasShownWelcome = false;
+
+    function toggleChat() {
+        let chat = document.getElementById("chatBox");
+        let cannt = document.querySelector(".cannt-wrapper");
+        let chatContent = document.getElementById("chatContent");
+
+        if (chat.style.display === "flex") {
+            chat.style.display = "none";
+            cannt.style.display = "block";
+        } else {
+            chat.style.display = "flex";
+            cannt.style.display = "none";
+
+            if (!hasShownWelcome) {
+                chatContent.innerHTML += `
+                    <div class="ai-msg">
+                        Halo! Saya <strong>Cannt</strong>, asisten AI dari Adam 😊<br>
+                        Silakan tanya apa saja ya!
+                    </div>
+                `;
+                hasShownWelcome = true;
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+        }
+    }
+
+    async function askAI() {
+        let questionInput = document.getElementById("question");
+        let question = questionInput.value.trim();
+
+        if (!question) return;
+
+        let chatContent = document.getElementById("chatContent");
+
+        chatContent.innerHTML += `
+            <div class="user-msg">${question}</div>
+        `;
+
+        questionInput.value = "";
+
+        let typingId = "typing-" + Date.now();
+        chatContent.innerHTML += `
+            <div class="ai-msg typing" id="${typingId}">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        try {
+            let response = await fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            let data = await response.json();
+
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = data.answer;
+            typingBubble.classList.add("ai-msg");
+        } catch (error) {
+            let typingBubble = document.getElementById(typingId);
+            typingBubble.classList.remove("typing");
+            typingBubble.innerHTML = "Maaf, Cannt lagi error 😅";
+            typingBubble.classList.add("ai-msg");
+        }
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let input = document.getElementById("question");
+
+        if (input) {
+            input.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    askAI();
+                }
+            });
+        }
+    });
+    </script>
+
+</body>
+</html>
